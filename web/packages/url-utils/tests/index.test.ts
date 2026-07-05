@@ -208,6 +208,12 @@ describe( 'profileUrl function', () => {
 		);
 	} );
 
+	it( 'should add format .json in case of JSON selected', () => {
+		expect( profileUrl( ' EXample@EXAMPLE.com  ', GravatarFormat.JSON ) ).toBe(
+			'https://www.gravatar.com/31c5543c1734d25c7206f5fd591525d0295bec6fe84ff82f946a34fe970a1e66.json'
+		);
+	} );
+
 	it( 'should add format .php in case of PHP selected', () => {
 		expect( profileUrl( 'example@example.com', GravatarFormat.PHP ) ).toBe(
 			'https://www.gravatar.com/31c5543c1734d25c7206f5fd591525d0295bec6fe84ff82f946a34fe970a1e66.php'

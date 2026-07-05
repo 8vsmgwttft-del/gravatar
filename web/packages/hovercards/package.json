@@ -54,6 +54,8 @@
 	],
 	"scripts": {
 		"start": "webpack serve --config ./webpack/config.playground.js",
+		"test:unit": "wp-scripts test-unit-js",
+		"test:unit:watch": "wp-scripts test-unit-js --watch",
 		"build": "npm run clean:dist && run-p 'build:types' 'build:core' 'build:react'",
 		"build:types": "tsc --declaration --declarationMap --emitDeclarationOnly",
 		"build:core": "webpack --config ./webpack/config.core.js --node-env=production",

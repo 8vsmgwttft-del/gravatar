@@ -436,8 +436,10 @@ export default class Hovercards {
 				</div>
 				${ ctaButtons }
 				<div class="gravatar-hovercard__footer">
-					<a class="gravatar-hovercard__profile-url" title="${ profileUrl }" href="${ trackedProfileUrl }" target="_blank">
-						${ profileUrl.replace( 'https://', '' ) }
+					<a class="gravatar-hovercard__profile-url" title="${ escHtml(
+						profileUrl
+					) }" href="${ trackedProfileUrl }" target="_blank">
+						${ escHtml( profileUrl.replace( 'https://', '' ) ) }
 					</a>
 					<a
 						class="gravatar-hovercard__profile-link${ isEditProfile ? ' gravatar-hovercard__profile-link--edit' : '' }"
@@ -600,12 +602,14 @@ export default class Hovercards {
 
 		const items = contactsData.map( ( [ key, value ]: string[] ) => {
 			const url = getUrl( key, value );
-			let text = value.replace( /^(https?:\/\/)?(www\.)?/, '' );
-			text = text.endsWith( '/' ) ? text.slice( 0, -1 ) : text;
-
-			if ( url ) {
-				text = `<a class="gravatar-hovercard__drawer-item-link" href="${ url }" target="_blank">${ text }</a>`;
-			}
+			const text = value.replace( /^(https?:\/\/)?(www\.)?/, '' ).replace( /\/$/, '' );
+			const escapedText = escHtml( text );
+			const escapedLabel = escHtml( labels[ key ] ?? key.replace( '_', ' ' ) );
+			const textContent = url
+				? `<a class="gravatar-hovercard__drawer-item-link" href="${ escUrl(
+						url
+				  ) }" target="_blank">${ escapedText }</a>`
+				: escapedText;
 
 			return `
 				<li class="gravatar-hovercard__drawer-item">
@@ -617,8 +621,8 @@ export default class Hovercards {
 						alt=""
 					>
 					<div class="gravatar-hovercard__drawer-item-info">
-						<span class="gravatar-hovercard__drawer-item-label">${ labels[ key ] ?? key.replace( '_', ' ' ) }</span>
-						<span class="gravatar-hovercard__drawer-item-text">${ text }</span>
+						<span class="gravatar-hovercard__drawer-item-label">${ escapedLabel }</span>
+						<span class="gravatar-hovercard__drawer-item-text">${ textContent }</span>
 					</div>
 				</li>
 			`;
@@ -638,14 +642,18 @@ export default class Hovercards {
 		const items: string[] = [];
 
 		payments.links?.forEach( ( item ) => {
+			const label = escHtml( item.label );
+			const url = escUrl( item.url );
+			const text = escHtml( item.url.replace( /^(https?:\/\/)/, '' ) );
+
 			items.push( `
 				<li class="gravatar-hovercard__drawer-item">
 					<img class="gravatar-hovercard__drawer-item-icon" width="24" height="24" src="https://s.gravatar.com/icons/link.svg" alt="">
 					<div class="gravatar-hovercard__drawer-item-info">
-						<span class="gravatar-hovercard__drawer-item-label">${ item.label }</span>
+						<span class="gravatar-hovercard__drawer-item-label">${ label }</span>
 						<span class="gravatar-hovercard__drawer-item-text">
-							<a class="gravatar-hovercard__drawer-item-link" href="${ item.url }" target="_blank">
-								${ item.url.replace( /^(https?:\/\/)/, '' ) }
+							<a class="gravatar-hovercard__drawer-item-link" href="${ url }" target="_blank">
+								${ text }
 							</a>
 						</span>
 					</div>
@@ -654,12 +662,15 @@ export default class Hovercards {
 		} );
 
 		payments.crypto_wallets?.forEach( ( item ) => {
+			const label = escHtml( item.label );
+			const address = escHtml( item.address );
+
 			items.push( `
 				<li class="gravatar-hovercard__drawer-item">
 					<img class="gravatar-hovercard__drawer-item-icon" width="24" height="24" src="https://s.gravatar.com/icons/link.svg" alt="">
 					<div class="gravatar-hovercard__drawer-item-info">
-						<span class="gravatar-hovercard__drawer-item-label">${ item.label }</span>
-						<span class="gravatar-hovercard__drawer-item-text">${ item.address }</span>
+						<span class="gravatar-hovercard__drawer-item-label">${ label }</span>
+						<span class="gravatar-hovercard__drawer-item-text">${ address }</span>
 					</div>
 				</li>
 			` );
