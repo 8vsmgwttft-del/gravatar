@@ -42,7 +42,7 @@ describe( 'Hovercards profile behavior', () => {
 		expect( labels ).toContain( 'BTC <img src=x onerror=alert(1)>' );
 
 		const contactLink = hovercard.querySelector(
-			'.gravatar-hovercard__drawer[data-drawer="contact"] .gravatar-hovercard__drawer-item-link'
+			'.gravatar-hovercard__drawer[data-drawer-name="contact"] .gravatar-hovercard__drawer-item-link'
 		);
 		expect( contactLink?.textContent ).toBe( 'person@example.com"><img src=x onerror=alert(1)>' );
 		expect( contactLink?.getAttribute( 'href' ) ).toBe(
@@ -50,9 +50,9 @@ describe( 'Hovercards profile behavior', () => {
 		);
 
 		const paymentLink = hovercard.querySelector(
-			'.gravatar-hovercard__drawer[data-drawer="send-money"] .gravatar-hovercard__drawer-item-link'
+			'.gravatar-hovercard__drawer[data-drawer-name="send-money"] .gravatar-hovercard__drawer-item-link'
 		);
-		expect( paymentLink?.textContent ).toBe( 'example.com/donate?quote="value"' );
+		expect( paymentLink?.textContent?.trim() ).toBe( 'example.com/donate?quote="value"' );
 		expect( paymentLink?.getAttribute( 'href' ) ).toBe( 'https://example.com/donate?quote=%22value%22' );
 
 		const walletAddress = hovercard.querySelectorAll( '.gravatar-hovercard__drawer-item-text' )[ 2 ];
