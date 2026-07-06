@@ -15,5 +15,22 @@ export function escHtml( str: string ) {
 }
 
 export function escUrl( url: string ) {
-	return encodeURI( url );
+	const isRelativeUrl = ! /^[a-zA-Z][a-zA-Z\d+\-.]*:/.test( url ) && ! url.startsWith( '//' );
+
+	if ( isRelativeUrl ) {
+		return encodeURI( url );
+	}
+
+	try {
+		const parsedUrl = new URL( url );
+		const allowedProtocols = new Set( [ 'http:', 'https:', 'mailto:', 'tel:' ] );
+
+		if ( ! allowedProtocols.has( parsedUrl.protocol ) ) {
+			return '';
+		}
+
+		return encodeURI( url );
+	} catch ( _ ) {
+		return '';
+	}
 }
