@@ -15,14 +15,16 @@ export function escHtml( str: string ) {
 }
 
 export function escUrl( url: string ) {
-	const isRelativeUrl = ! /^[a-zA-Z][a-zA-Z\d+\-.]*:/.test( url ) && ! url.startsWith( '//' );
+	const hasProtocol = /^[a-zA-Z][a-zA-Z\d+\-.]*:/.test( url );
+	const isProtocolRelativeUrl = url.startsWith( '//' );
+	const isRelativeUrl = ! hasProtocol && ! isProtocolRelativeUrl;
 
 	if ( isRelativeUrl ) {
 		return encodeURI( url );
 	}
 
 	try {
-		const parsedUrl = new URL( url );
+		const parsedUrl = new URL( url, 'https://gravatar.com' );
 		const allowedProtocols = new Set( [ 'http:', 'https:', 'mailto:', 'tel:' ] );
 
 		if ( ! allowedProtocols.has( parsedUrl.protocol ) ) {

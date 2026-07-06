@@ -4,6 +4,7 @@ describe( 'escUrl', () => {
 	it( 'returns encoded values for allowed URLs', () => {
 		expect( escUrl( 'https://example.com?q="quoted"' ) ).toBe( 'https://example.com?q=%22quoted%22' );
 		expect( escUrl( 'mailto:user@example.com' ) ).toBe( 'mailto:user@example.com' );
+		expect( escUrl( '//example.com/path?q="quoted"' ) ).toBe( '//example.com/path?q=%22quoted%22' );
 		expect( escUrl( '/profiles/test?value=hello world' ) ).toBe( '/profiles/test?value=hello%20world' );
 	} );
 
