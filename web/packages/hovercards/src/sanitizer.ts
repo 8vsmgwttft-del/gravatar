@@ -1,3 +1,5 @@
+const ALLOWED_PROTOCOLS = new Set( [ 'http:', 'https:', 'mailto:', 'tel:' ] );
+
 export function escHtml( str: string ) {
 	const htmlEntities: Record< string, string > = {
 		'&': '&amp;',
@@ -24,10 +26,9 @@ export function escUrl( url: string ) {
 	}
 
 	try {
-		const parsedUrl = new URL( url, 'https://gravatar.com' );
-		const allowedProtocols = new Set( [ 'http:', 'https:', 'mailto:', 'tel:' ] );
+		const parsedUrl = isProtocolRelativeUrl ? new URL( `https:${ url }` ) : new URL( url );
 
-		if ( ! allowedProtocols.has( parsedUrl.protocol ) ) {
+		if ( ! ALLOWED_PROTOCOLS.has( parsedUrl.protocol ) ) {
 			return '';
 		}
 
