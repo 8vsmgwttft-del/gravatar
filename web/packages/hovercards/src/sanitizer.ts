@@ -1,3 +1,5 @@
+const ALLOWED_PROTOCOLS = new Set( [ 'http:', 'https:', 'mailto:', 'tel:' ] );
+
 export function escHtml( str: string ) {
 	const htmlEntities: Record< string, string > = {
 		'&': '&amp;',
@@ -15,5 +17,23 @@ export function escHtml( str: string ) {
 }
 
 export function escUrl( url: string ) {
-	return encodeURI( url );
+	const hasProtocol = /^[a-zA-Z][a-zA-Z\d+\-.]*:/.test( url );
+	const isProtocolRelativeUrl = url.startsWith( '//' );
+	const isRelativeUrl = ! hasProtocol && ! isProtocolRelativeUrl;
+
+	if ( isRelativeUrl ) {
+		return encodeURI( url );
+	}
+
+	try {
+		const parsedUrl = isProtocolRelativeUrl ? new URL( `https:${ url }` ) : new URL( url );
+
+		if ( ! ALLOWED_PROTOCOLS.has( parsedUrl.protocol ) ) {
+			return '';
+		}
+
+		return encodeURI( url );
+	} catch ( _ ) {
+		return '';
+	}
 }
